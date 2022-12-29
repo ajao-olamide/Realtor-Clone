@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import OAuth from "../components/OAuth";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -11,7 +11,6 @@ import { db } from "../firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
-
 export default function SignUp() {
   var [showPassword, setShowPassword] = useState(false);
   const [formData, setForData] = useState({
@@ -20,7 +19,7 @@ export default function SignUp() {
     password: "",
   });
   const { name, email, password } = formData;
-  const navigate  = useNavigate()
+  const navigate = useNavigate();
   function onChange(e) {
     setForData((prevState) => ({
       ...prevState,
@@ -44,11 +43,11 @@ export default function SignUp() {
       delete formDataCopy.password;
       formDataCopy.timestamp = serverTimestamp();
 
-      await setDoc(doc(db, "users", user.uid), formDataCopy)
+      await setDoc(doc(db, "users", user.uid), formDataCopy);
       navigate("/");
-      toast.success('sign up was succesful')
+      toast.success("sign up was succesful");
     } catch (error) {
-      toast.error("Something went wrong with the registration")
+      toast.error("Something went wrong with the registration");
     }
   }
   return (
@@ -82,7 +81,7 @@ export default function SignUp() {
             />
             <div className="relative">
               <input
-                className=" w-full p-3 border-[2px] text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out  mb-5"
+                className=" w-full p-3 border-[2px] text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out  "
                 type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
@@ -104,6 +103,9 @@ export default function SignUp() {
                   show
                 </p>
               )}
+              <p className="text-sm text-red-500 mb-5">
+                Password must not be less than 6 characters
+              </p>
             </div>
             <div className="flex flex-wrap justify-between whitespace-nowrap text-sm sm:text-lg">
               <p className="mb-3">

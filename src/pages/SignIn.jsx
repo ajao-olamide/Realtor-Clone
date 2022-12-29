@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Link as Link } from "react-router-dom";
+import { Link as Link, Navigate, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import { toast } from "react-toastify";
 export default function SignIn() {
   var [showPassword, setShowPassword] = useState(false);
   const [formData, setForData] = useState({
@@ -8,11 +10,31 @@ export default function SignIn() {
     password: "",
   });
   const { email, password } = formData;
+  const navigate = useNavigate();
+
   function onChange(e) {
     setForData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
     }));
+  }
+  async function onSubmit(e) {
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      if (userCredential.user) {
+        navigate("/");
+       
+      }
+      toast.success('Login Successful')
+    } catch (error) {
+      toast.error("Bad User Credentials");
+    }
   }
   return (
     <section>
@@ -26,7 +48,7 @@ export default function SignIn() {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form action="">
+          <form onSubmit={onSubmit}>
             <input
               className="w-full p-3 border-[2px] text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-7"
               type="email"
@@ -45,14 +67,19 @@ export default function SignIn() {
                 placeholder="Password"
               />
               {showPassword ? (
-                <p className="absolute right-3 top-3 text-xl cursor-pointer" onClick={()=>setShowPassword((prevState)=>!prevState)}>
+                <p
+                  className="absolute right-3 top-3 text-xl cursor-pointer"
+                  onClick={() => setShowPassword((prevState) => !prevState)}
+                >
                   hide
                 </p>
               ) : (
-                <p className="absolute right-3 top-3 text-xl cursor-pointer" onClick={()=>setShowPassword((prevState)=>!prevState)}>
+                <p
+                  className="absolute right-3 top-3 text-xl cursor-pointer"
+                  onClick={() => setShowPassword((prevState) => !prevState)}
+                >
                   show
                 </p>
-                
               )}
             </div>
             <div className="flex flex-wrap justify-between whitespace-nowrap text-sm sm:text-lg">
