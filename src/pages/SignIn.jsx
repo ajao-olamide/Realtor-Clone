@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { toast } from "react-toastify";
 export default function SignIn() {
   var [showPassword, setShowPassword] = useState(false);
-  const [formData, setForData] = useState({
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
@@ -13,7 +13,7 @@ export default function SignIn() {
   const navigate = useNavigate();
 
   function onChange(e) {
-    setForData((prevState) => ({
+    setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
     }));
